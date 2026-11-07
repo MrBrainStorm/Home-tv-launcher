@@ -1,0 +1,21 @@
+{
+  "dock_apps": [
+    "watch.kino",
+    "com.google.android.youtube.tv",
+    "ru.kinopoisk.tv",
+    "com.vk.tv"
+  ],
+  "app_keys": [
+    "191:watch.kino",
+    "231:com.google.android.youtube.tv"
+  ],
+  "fill_dock": false,
+  "date_below_clock": true,
+  "show_greeting": false,
+  "library_button": true,
+  "dock_title": false,
+  "ambient_glow": false,
+  "app_library": true,
+  "app_library_selection": true,
+  "reduced_motion": true
+}
