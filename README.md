@@ -4,7 +4,7 @@ Personal Android TV home for Xiaomi MiTV-MSSP1 (Android 9), built from pinned Cl
 
 - Four selected apps: KinoWatch, YouTube, Kinopoisk and VK Video; all apps remain available through the grid button.
 - Eight bundled landscapes rotate every 30 minutes with a 20% shade. Credits are in assets/home-theme/CREDITS.md.
-- Current weather for Kuleshovka, Rostov-on-Don and Azov comes from Open-Meteo, cached locally and refreshed every 30 minutes while Home is visible. Requests use the existing home SOCKS proxy at 172.31.250.2:10810.
+- Current weather for Kuleshovka, Rostov-on-Don and Azov comes from Open-Meteo, cached locally and refreshed on every entry to Home and every 30 minutes while Home remains visible; previous readings stay visible during requests and failures. Requests use the existing home SOCKS proxy at 172.31.250.2:10810.
 - Theme files are installed into private application storage: this TV's missing adopted USB storage does not prevent wallpaper loading.
 - Mi launches KinoWatch; voice launches YouTube through key mapping or the firmware assistant/search intent. HomeKeyService handles Home, stock-screen redirection and return to Home on wake.
 - Exit opens the stock launcher temporarily. Home returns to this launcher; screen-on also returns to Home.
@@ -37,3 +37,5 @@ adb shell settings put secure voice_interaction_service com.google.android.katni
 adb shell cmd package set-home-activity --user 0 com.google.android.tvlauncher/.MainActivity
 adb shell am start -n com.google.android.tvlauncher/.MainActivity
 ```
+
+Microphone handling runs entirely on the TV: a private app-generated ADB key connects only to 127.0.0.1:5555 and reads microphone key releases. Confirm the local debugging prompt once. No Pi service is used. ADB must remain enabled on the TV. AdbLib is vendored from cgutman/AdbLib at d6937951eb98557c76ee2081e383d50886ce109a; its license is included in assets.
