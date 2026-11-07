@@ -16,6 +16,9 @@ jobs:
           distribution: temurin
           java-version: '17'
       - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+          log-accepted-android-sdk-licenses: false
       - name: Fetch pinned source
         run: |
           curl --fail --location --retry 3 https://github.com/Gathin23/cleanyourtv/archive/3f175120f9802ab4364f61d040db9aa78ec71493.tar.gz -o source.tar.gz
