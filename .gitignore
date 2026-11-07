@@ -1,0 +1,9 @@
+/artifacts*/
+/*.apk
+/*.idsig
+/*.jks
+/*.keystore
+/network-config-backup.json
+/screen-*
+/theme/
+/config.xml
