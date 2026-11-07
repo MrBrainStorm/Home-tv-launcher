@@ -2450,6 +2450,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
 
     @Override
     public boolean onTileVerticalKey(int position, int keyCode) {
+        if (!reordering && keyCode == KeyEvent.KEYCODE_DPAD_RIGHT && position == adapter.dockFilled() - 1) { startActivity(new Intent(this, HomeDashboardActivity.class)); return true; }
         if (!reordering && keyCode == KeyEvent.KEYCODE_DPAD_DOWN) { showSecondPage(); return true; }
         int count = adapter.appCount();
         int target;
