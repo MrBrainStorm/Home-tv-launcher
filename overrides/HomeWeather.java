@@ -14,6 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 final class HomeWeather {
  private final Activity activity; private final TextView main,other; private final Handler handler=new Handler(Looper.getMainLooper());
+ private LinearLayout weatherBox;
  private final SharedPreferences cache; private boolean active,busy; private long lastFetch;
  private final Runnable tick=()->{if(active)refresh();};
  HomeWeather(Activity a,FrameLayout root){
@@ -22,12 +23,13 @@ final class HomeWeather {
   shade.setBackground(new android.graphics.drawable.GradientDrawable(android.graphics.drawable.GradientDrawable.Orientation.TOP_BOTTOM,new int[]{0x99000000,0x00000000}));
   root.addView(shade,3,new FrameLayout.LayoutParams(-1,dp(280),Gravity.TOP));
   cache=a.getSharedPreferences("home_weather",0);
-  LinearLayout box=new LinearLayout(a);box.setOrientation(LinearLayout.VERTICAL);box.setFocusable(false);
+  LinearLayout box=new LinearLayout(a);weatherBox=box;box.setOrientation(LinearLayout.VERTICAL);box.setFocusable(false);
   FrameLayout.LayoutParams p=new FrameLayout.LayoutParams(-2,-2,Gravity.TOP|Gravity.LEFT);p.leftMargin=dp(60);p.topMargin=dp(150);
   main=new TextView(a);main.setTextSize(25);main.setTextColor(Color.WHITE);main.setTypeface(Typeface.create("sans-serif-medium",Typeface.NORMAL));main.setShadowLayer(5,0,2,Color.BLACK);
   other=new TextView(a);other.setTextSize(17);other.setTypeface(Typeface.create("sans-serif-medium",Typeface.NORMAL));other.setTextColor(0xDDFFFFFF);other.setPadding(0,dp(9),0,0);other.setShadowLayer(4,0,2,Color.BLACK);
   main.setText(cache.getString("main","Кулешовка · загрузка погоды…"));other.setText(cache.getString("other","Ростов-на-Дону · Азов"));box.addView(main);box.addView(other);root.addView(box,p);
  }
+ void setPageVisible(boolean visible){weatherBox.setVisibility(visible?android.view.View.VISIBLE:android.view.View.INVISIBLE);}
  void exit(){try{activity.getSharedPreferences("home_exit",0).edit().putBoolean("stock",true).commit();activity.startActivity(new android.content.Intent().setComponent(new android.content.ComponentName("com.google.android.tvlauncher","com.google.android.tvlauncher.MainActivity")).addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK));}catch(Exception e){activity.getSharedPreferences("home_exit",0).edit().putBoolean("stock",false).apply();Toast.makeText(activity,"Стандартный экран недоступен",Toast.LENGTH_SHORT).show();}}
  int dp(int n){return Math.round(n*activity.getResources().getDisplayMetrics().density);}
  void start(){active=true;refresh(true);}

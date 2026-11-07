@@ -144,6 +144,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private AppAdapter adapter;
     private RecyclerView grid;
     private FrameLayout root;
+    private HomeAppsPage secondPage;
     private HomeWeather homeWeather;
     private WallpaperPlayer wallpaperPlayer;
     private GlassView glass;
@@ -849,7 +850,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             onLibraryRequested();
             libraryFromTopBar = true;   // closing it goes back to this button, not to the pill after the last row
         });
-        btnLibraryTop.setVisibility(cfg.libraryButton && cfg.appLibrary ? View.VISIBLE : View.GONE);
+        btnLibraryTop.setVisibility(View.GONE);
         addTopBarApps(cfg.topBarApps, cfg.launchActions);
         iconOnlyButtons = cfg.iconOnlyButtons;
         topMenu = cfg.topMenu;
@@ -1055,6 +1056,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        closeSecondPage();
         if (openLauncherSettingsIfAsked(intent)) return;
         if (openLibraryIfAsked(intent)) return;
         if (openInputsIfAsked(intent)) return;
@@ -1430,6 +1432,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
      */
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
+        if (secondPage != null && (event.getKeyCode() == KeyEvent.KEYCODE_BACK || event.getKeyCode() == KeyEvent.KEYCODE_ESCAPE)) { if (event.getAction() == KeyEvent.ACTION_UP) closeSecondPage(); return true; }
         if (homeIgnoreChannelKeys && RemoteKeys.isChannelKey(event.getKeyCode())) return true;
         // Vendor keys (TCL Netflix button, 4062) never reach the key services, only the focused window, so their
         // "hold:" entries run here too or nowhere. Only while resumed: onPause releases Home's holds, and a DOWN
@@ -1768,6 +1771,21 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     public void onBackPressed() {
         // Home screen: Back goes nowhere, unless back_opens_clock is on.
         if (backOpensClock) startActivity(new Intent(this, ClockActivity.class));
+    }
+
+    private void showSecondPage() {
+        if (secondPage != null) return;
+        grid.setVisibility(View.INVISIBLE);
+        homeWeather.setPageVisible(false);
+        secondPage = new HomeAppsPage(this, root, this::closeSecondPage);
+        secondPage.show();
+    }
+    private void closeSecondPage() {
+        if (secondPage == null) return;
+        secondPage.remove(); secondPage = null;
+        grid.setVisibility(View.VISIBLE);
+        homeWeather.setPageVisible(true);
+        grid.post(() -> focusTile(Math.max(0, Math.min(lastFocused, 3))));
     }
 
     // ---- glass highlight -------------------------------------------------------------------------
@@ -2432,6 +2450,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
 
     @Override
     public boolean onTileVerticalKey(int position, int keyCode) {
+        if (!reordering && keyCode == KeyEvent.KEYCODE_DPAD_DOWN) { showSecondPage(); return true; }
         int count = adapter.appCount();
         int target;
         if (singleRow) {
