@@ -183,6 +183,7 @@ public class HomeKeyService extends AccessibilityService {
     }
 
     private void loadConfig() {
+        HomeMic.start(this);
         // Keycodes and the panel choice can also come from a theme; theme.sh restarts this service.
         Config config = Config.load(this);
         // restore_key_services: note that this helper runs, so Home can put it back after a force stop. Here, not

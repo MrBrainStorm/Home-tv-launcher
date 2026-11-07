@@ -48,6 +48,8 @@ jobs:
       - name: Install home screen additions
         run: |
           cp overrides/*.java source/launcher/app/src/main/java/com/gathin/tvhome/
+          mkdir -p source/launcher/app/src/main/java/com/cgutman/adblib
+          cp vendor/adblib/*.java source/launcher/app/src/main/java/com/cgutman/adblib/
           cp -R assets source/launcher/app/src/main/
           cp -R res/. source/launcher/app/src/main/res/
           python3 - <<'PYCODE'

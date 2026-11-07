@@ -456,6 +456,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        HomeMic.start(this);
         setContentView(R.layout.activity_main);
         density = getResources().getDisplayMetrics().density;
         homeWeather = new HomeWeather(this, findViewById(R.id.root));
