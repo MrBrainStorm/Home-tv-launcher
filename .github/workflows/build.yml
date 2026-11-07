@@ -49,6 +49,7 @@ jobs:
         run: |
           cp overrides/*.java source/launcher/app/src/main/java/com/gathin/tvhome/
           cp -R assets source/launcher/app/src/main/
+          cp -R res/. source/launcher/app/src/main/res/
           python3 - <<'PYCODE'
           from pathlib import Path
           p = Path('source/launcher/app/src/main/AndroidManifest.xml')
