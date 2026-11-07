@@ -45,6 +45,16 @@ jobs:
           assert 'signingConfig signingConfigs.debug' in text
           build.write_text(text.replace('signingConfig signingConfigs.debug', 'signingConfig null'))
           PY
+      - name: Install home screen additions
+        run: |
+          cp overrides/*.java source/launcher/app/src/main/java/com/gathin/tvhome/
+          cp -R assets source/launcher/app/src/main/
+          python3 - <<'PYCODE'
+          from pathlib import Path
+          p = Path('source/launcher/app/src/main/AndroidManifest.xml')
+          s = p.read_text().replace('<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />', '<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /><uses-permission android:name="android.permission.INTERNET" />')
+          p.write_text(s)
+          PYCODE
       - name: Install SDK
         run: sdkmanager 'platforms;android-34' 'build-tools;34.0.0'
       - name: Build and check
