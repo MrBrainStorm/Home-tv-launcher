@@ -17,10 +17,14 @@ final class HomeWeather {
  private final SharedPreferences cache; private boolean active,busy; private long lastFetch;
  private final Runnable tick=()->{if(active)refresh();};
  HomeWeather(Activity a,FrameLayout root){
-  activity=a;cache=a.getSharedPreferences("home_weather",0);
+  activity=a;
+  Button exit=new Button(a);exit.setText("Выход");exit.setTextSize(12);exit.setTextColor(Color.WHITE);exit.setAllCaps(false);exit.setContentDescription("Открыть стандартный экран");
+  FrameLayout.LayoutParams ep=new FrameLayout.LayoutParams(-2,dp(42),Gravity.TOP|Gravity.RIGHT);ep.rightMargin=dp(56);ep.topMargin=dp(92);root.addView(exit,ep);
+  exit.setOnClickListener(v->{try{a.getSharedPreferences("home_exit",0).edit().putBoolean("stock",true).commit();a.startActivity(new android.content.Intent().setComponent(new android.content.ComponentName("com.google.android.tvlauncher","com.google.android.tvlauncher.MainActivity")).addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK));}catch(Exception e){a.getSharedPreferences("home_exit",0).edit().putBoolean("stock",false).apply();Toast.makeText(a,"Стандартный экран недоступен",Toast.LENGTH_SHORT).show();}});
+  cache=a.getSharedPreferences("home_weather",0);
   LinearLayout box=new LinearLayout(a);box.setOrientation(LinearLayout.VERTICAL);box.setFocusable(false);
   FrameLayout.LayoutParams p=new FrameLayout.LayoutParams(-2,-2,Gravity.TOP|Gravity.LEFT);p.leftMargin=dp(60);p.topMargin=dp(150);
-  main=new TextView(a);main.setTextSize(25);main.setTextColor(Color.WHITE);main.setTypeface(Typeface.create("sans-serif-light",0));main.setShadowLayer(5,0,2,Color.BLACK);
+  main=new TextView(a);main.setTextSize(25);main.setTextColor(Color.WHITE);main.setTypeface(Typeface.create("sans-serif-light",Typeface.NORMAL));main.setShadowLayer(5,0,2,Color.BLACK);
   other=new TextView(a);other.setTextSize(14);other.setTextColor(0xDDFFFFFF);other.setPadding(0,dp(9),0,0);other.setShadowLayer(4,0,2,Color.BLACK);
   main.setText(cache.getString("main","Кулешовка · загрузка погоды…"));other.setText(cache.getString("other","Ростов-на-Дону · Азов"));box.addView(main);box.addView(other);root.addView(box,p);
  }

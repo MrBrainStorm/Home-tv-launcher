@@ -1086,6 +1086,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     @Override
     protected void onResume() {
         super.onResume();
+        getSharedPreferences("home_exit",0).edit().putBoolean("stock",false).apply();
         if (homeWeather != null) homeWeather.start();
         resumed = true;
         // A festival that started or ended while Home was in the background: rebuild with or without it.
